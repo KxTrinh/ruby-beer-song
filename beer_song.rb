@@ -1,25 +1,46 @@
 class BeerSong
-
+  attr_reader :quantity
   def verse(quantity)
-    # if quantity == 99
-    # "99 bottles of beer on the wall, 99 bottles of beer.\nTake one down and pass it around, 98 bottles of beer on the wall.\n"
-    # elsif quantity == 3
-    # "3 bottles of beer on the wall, 3 bottles of beer.\nTake one down and pass it around, 2 bottles of beer on the wall.\n"
-    # else
-    # "2 bottles of beer on the wall, 2 bottles of beer.\nTake one down and pass it around, 1 bottle of beer on the wall.\n"
-    # end
+    @quantity = quantity
+    "#{first_sentence}\n#{second_sentence}"
+  end
 
-    if quantity >= 2
-      "#{quantity} bottle#{quantity == 1? '' : 's'} of beer on the wall, #{quantity} bottle#{quantity == 1? '' : 's'} of beer.\n"\
-      "Take #{quantity == 1? 'it': 'one'} down and pass it around, #{quantity == 1? 'no more' : '' }#{quantity - 1} bottle#{quantity - 1 == 1? '' : 's'} of beer on the wall.\n"
+  def verses(last_verse, first_verse)
+    (first_verse..last_verse).map {|number| verse(number)}.reverse.join("\n")
+  end
+
+  def lyrics
+    verses(99, 0)
+  end
+  def first_sentence
+    "#{first_article} bottle#{plural} of beer on the wall, #{article} bottle#{plural} of beer."\
+  end
+
+  def second_sentence
+    if quantity == 0
+      "Go to the store and buy some more, 99 bottles of beer on the wall.\n"
     else
-      "#{quantity} bottle of beer on the wall, #{quantity} bottle of beer.\n"\
-      "Take it down and pass it around, no more bottles of beer on the wall.\n"
+      "Take #{quantity == 1 ? 'it': 'one'} down and pass it around, #{no_more?} bottle#{'s' unless quantity == 2} of beer on the wall.\n"
     end
   end
 
-  def single_bottle
-    "1 bottle of beer on the wall, 1 bottle of beer on the wall.\n"\
-    "Take it down and pass it around, no more bottles of beer on the wall.\n"
+  def plural
+    quantity == 1 ? '' : 's'
   end
+
+  def first_article
+    (quantity != 0) ? quantity : 'No more'
+  end
+
+  def article
+    (quantity != 0) ? quantity : 'no more'
+  end
+
+  def no_more?
+    (quantity == 1) ? 'no more' : quantity - 1
+  end
+end
+
+module BookKeeping
+  VERSION = 2
 end
